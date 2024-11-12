@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Management</title>
+  <style>
+    :root {
+      --grey-light: #f0f4f8;
+      --grey-dark: #2c3e50;
+      --grey-darker: #29343c;
+    }
+
+    body {
+      background-color: var(--grey-light);
+      color: var(--grey-darker);
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    
+    .orders-header {
+      background: linear-gradient(135deg, #ffffff 0%, #29343c 100%);
+      color: var(--grey-darker);
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 6px rgba(44, 62, 80, 0.1);
+    }
+
+    .orders-header h1 {
+      background: linear-gradient(to right, var(--grey-darker) 0%, var(--grey-dark) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: bold;
+    }
+
+
+    .tabs {
+      display: flex;
+      gap: 1rem;
+      background-color: var(--grey-dark);
+      padding: 0.5rem;
+      border-radius: 8px;
+    }
+
+    .tabs a {
+      padding: 0.75rem 1.5rem;
+      color: var(--grey-light);
+      text-decoration: none;
+      font-weight: 500;
+      border-radius: 6px;
+      transition: background 0.3s;
+      cursor: pointer;
+    }
+
+    .tabs a.active {
+      background-color: var(--grey-darker);
+      color: var(--grey-light);
+    }
+
+    .seller-form, .seller-history {
+      background-color: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(44, 62, 80, 0.1);
+    }
+
+    .seller-form label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--grey-darker);
+    }
+
+    .seller-form input, .seller-form select, .seller-form textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--grey-dark);
+      border-radius: 4px;
+      margin-bottom: 1rem;
+      font-size: 16px;
+    }
+
+    .seller-form button {
+      background-color: var(--grey-darker);
+      color: var(--grey-light);
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .seller-history h2, .seller-form h2 {
+      color: var(--grey-dark);
+      border-left: 4px solid var(--grey-dark);
+      padding-left: 0.5rem;
+    }
+
+    .seller-history table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    .seller-history th, .seller-history td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid var(--grey-dark);
+    }
+
+    .seller-history th {
+      background-color: var(--grey-light);
+      color: var(--grey-darker);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="orders-header">
+      <h1>Order Management</h1>
+    </div>
+
+    <div class="tabs">
+      <a href="#" id="list-product-tab" class="active">List the Products</a>
+      <a href="#" id="seller-dashboard-tab">Seller Dashboard</a>
+    </div>
+
+    <div id="list-product" class="section">
+      <div class="seller-form">
+        <h2>List Your Product on Auction Alley</h2>
+        <form id="sellerForm" enctype="multipart/form-data">
+          <label for="category">Category of the Product:</label>
+          <select id="category" name="category" required>
+            <option value="">--Select Category--</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Mobiles">Mobiles</option>
+            <option value="Fashion">Fashion</option>
+            <option value="Sports">Sports</option>
+            <option value="Books and Stationery">Books and Stationery</option>
+            <option value="Jewellery">Jewellery</option>
+          </select>
+
+          <label for="bidding-time">Bidding Time:</label>
+          <select id="bidding-time" name="bidding-time" required onchange="toggleCustomTimeInput(this)">
+            <option value="">--Select--</option>
+            <option value="3 Hours">3 Hours</option>
+            <option value="6 Hours">6 Hours</option>
+            <option value="12 Hours">12 Hours</option>
+            <option value="24 Hours">24 Hours</option>
+            <option value="36 Hours">36 Hours</option>
+            <option value="48 Hours">48 Hours</option>
+            <option value="custom">Other</option>
+          </select>
+
+          <div id="custom-time-container" style="display: none;">
+            <label for="custom-time">Enter Time (in hours):</label>
+            <input type="number" id="custom-time" name="custom-time" min="1" placeholder="Enter hours">
+          </div>
+
+          <label for="productName">Product Name:</label>
+          <input type="text" id="productName" name="productName" required>
+
+          <label for="productImages">Product Images:</label>
+          <input type="file" id="productImages" name="productImages" accept="image/*" multiple required>
+
+          <label for="basePrice">Base Price:</label>
+          <input type="number" id="basePrice" name="basePrice" min="0" step="0.01" required>
+
+          <label for="minBidIncrement">Minimum Bid Price Increment:</label>
+          <input type="number" id="minBidIncrement" name="minBidIncrement" min="0" step="0.01" required>
+
+          <label for="description">Product Description:</label>
+          <textarea id="description" name="description" rows="5" required></textarea>
+
+          <button type="submit">List Product for Auction</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="seller-dashboard" class="section" style="display: none;">
+      <div class="seller-history">
+        <h2>SELLER DASHBOARD</h2>
+
+        <h3>CURRENT LISTINGS</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Top Bidder</th>
+              <th>Current Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Wireless Earbuds</td>
+              <td>John Doe</td>
+              <td>₹1500</td>
+            </tr>
+            <tr>
+              <td>Smartwatch</td>
+              <td>Jane Smith</td>
+              <td>₹2000</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>HISTORY</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Buyer</th>
+              <th>Price</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Bluetooth Speaker</td>
+              <td>Alex Brown</td>
+              <td>₹800</td>
+              <td>Oct 15, 2024</td>
+            </tr>
+            <tr>
+              <td>Laptop Stand</td>
+              <td>Chris Green</td>
+              <td>₹450</td>
+              <td>Sep 30, 2024</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const listProductTab = document.getElementById('list-product-tab');
+    const sellerDashboardTab = document.getElementById('seller-dashboard-tab');
+    const listProductSection = document.getElementById('list-product');
+    const sellerDashboardSection = document.getElementById('seller-dashboard');
+
+    // Function to switch to the selected tab and show the respective section
+    function switchToTab(selectedTab, unselectedTab, showSection, hideSection) {
+      selectedTab.classList.add('active');
+      unselectedTab.classList.remove('active');
+      showSection.style.display = 'block';
+      hideSection.style.display = 'none';
+    }
+
+    // Event listeners for tab clicks
+    listProductTab.addEventListener('click', (e) => {
+      e.preventDefault();
+      switchToTab(listProductTab, sellerDashboardTab, listProductSection, sellerDashboardSection);
+    });
+
+    sellerDashboardTab.addEventListener('click', (e) => {
+      e.preventDefault();
+      switchToTab(sellerDashboardTab, listProductTab, sellerDashboardSection, listProductSection);
+    });
+
+    function toggleCustomTimeInput(selectElement) {
+      const customTimeContainer = document.getElementById("custom-time-container");
+      if (selectElement.value === "custom") {
+        customTimeContainer.style.display = "block";
+      } else {
+        customTimeContainer.style.display = "none";
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+/* Basic reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    height: 100%;
+    font-family: Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: url('./img/aa2.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: #fff;
+    overflow: hidden;
+}
+
+.navbar {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    padding: 10px 30px;
+    display: flex;
+    justify-content: space-between;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.nav-links a {
+    margin: 0 15px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.nav-links a:hover {
+    text-decoration: underline;
+}
+
+.homepage-container {
+    text-align: center;
+    padding: 20px;
+}
+
+.main-title {
+    font-size: 60px;
+    font-family: 'Brush Script MT', cursive;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* General button styling */
+button {
+    padding: 14px 0; /* Adjust padding for vertical space only */
+    background-color: transparent;
+    color: #fff;
+    border: 3px solid #FFD700;
+    border-radius: 25px;
+    font-size: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 150px; /* Fixed width to make buttons equal in size */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+button:hover {
+    background-color: rgba(255, 215, 0, 0.2);
+    color: #FFD700;
+}
+
+/* Styles for the auth-buttons container */
+.auth-buttons {
+    margin-top: -10px;
+    display: flex;
+    flex-direction: column; /* Stack buttons vertically */
+    align-items: center;
+    gap: 15px; /* Space between buttons */
+}

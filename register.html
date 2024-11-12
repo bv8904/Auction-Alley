@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Auction Alley</title>
+    <link rel="stylesheet" href="account.css">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <meta name="google-signin-client_id" content="YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com">
+    <style>
+        .google-login-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <h2 class="auth-title">Register for Auction Alley</h2>
+
+        <!-- Google Sign-In Button Container -->
+        <div class="google-login-container">
+            <div class="g-signin2" data-onsuccess="onSignIn"></div>
+        </div>
+
+        <div class="separator">or</div>
+
+        <form onsubmit="handleFormSubmit(event, 'register')">
+            <input type="email" name="email" placeholder="Enter Email" required>
+            <input type="password" name="password" placeholder="Create Password" required>
+            <input type="password" name="confirm_password" placeholder="Confirm Password" required>
+            <button type="submit">Register</button>
+        </form>
+
+        <p class="auth-link">Already have an account? <a href="login.html">Login here</a></p>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fine Jewelry Auction</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f0f4f8;
+            color: #29343c;
+        }
+
+        header {
+            background-color: #2c3e50;
+            color: #f0f4f8;
+            text-align: center;
+            padding: 2.5rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .product-card {
+            background: white;
+            border: 1px solid #29343c;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .product-image {
+          width: 100%;
+          height: 200px;
+          object-fit: contain; /* This will ensure the image is fully visible within its container */
+          display: block; /* Ensures images take up only the space they need */
+          margin: 0 auto; /* Centers the image */
+          border-radius: 4px;
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-title {
+            font-size: 1.3rem;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .product-info p {
+            color: #29343c;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .specifications {
+            background: #f0f4f8;
+            padding: 1.2rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .specifications li {
+            list-style: none;
+            margin: 0.6rem 0;
+            color: #29343c;
+        }
+
+        .price-info {
+            background: #2c3e50;
+            color: #f0f4f8;
+            padding: 1.2rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .price-info p {
+            color: #f0f4f8;
+            margin: 0.5rem 0;
+        }
+
+        .bid-button {
+            background-color: #2c3e50;
+            color: #f0f4f8;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1.1rem;
+            transition: background-color 0.3s;
+        }
+
+        .bid-button:hover {
+            background-color: #29343c;
+        }
+
+        .certification {
+            font-size: 0.9rem;
+            color: #29343c;
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Fine Jewellery</h1>
+        <p>Exceptional Pieces from Distinguished Collections</p>
+    </header>
+
+    <div class="container">
+        <div class="products-grid">
+            <div class="product-card">
+                <img src="./img/antique-french-diamond-necklace_4_90-1-6595.webp" alt="Diamond Necklace" class="product-image">
+                <div class="product-info">
+                    <h2 class="product-title">Vintage Diamond Necklace</h2>
+                    <p>Art Deco masterpiece featuring exceptional craftsmanship and brilliant-cut diamonds.</p>
+                    <ul class="specifications">
+                        <li>• Total Diamond Weight: 3.5 carats</li>
+                        <li>• Metal: Platinum</li>
+                        <li>• Length: 16 inches</li>
+                        <li>• Circa 1925</li>
+                    </ul>
+                    <div class="price-info">
+                        <p><strong>Starting Bid:</strong> ₹18,500</p>
+                        <p><strong>Current Bid:</strong> ₹19,200</p>
+                        <p><strong>Minimum Increment:</strong> ₹500</p>
+                    </div>
+                    <button class="bid-button">Place Bid</button>
+                    <p class="certification">GIA Certified</p>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <img src="./img/rubyring.jpg" alt="Ruby Ring" class="product-image">
+                <div class="product-info">
+                    <h2 class="product-title">Burmese Ruby Ring</h2>
+                    <p>Magnificent pigeon-blood ruby surrounded by brilliant-cut diamonds.</p>
+                    <ul class="specifications">
+                        <li>• Ruby Weight: 2.8 carats</li>
+                        <li>• Diamond Accents: 1.2 carats</li>
+                        <li>• Metal: 18K White Gold</li>
+                        <li>• Size: 7 (Resizable)</li>
+                    </ul>
+                    <div class="price-info">
+                        <p><strong>Starting Bid:</strong> ₹35,000</p>
+                        <p><strong>Current Bid:</strong> ₹37,500</p>
+                        <p><strong>Minimum Increment:</strong> ₹1,000</p>
+                    </div>
+                    <button class="bid-button">Place Bid</button>
+                    <p class="certification">SSEF Certified</p>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <img src="./img/kashmirsaphire.webp" alt="Sapphire Earrings" class="product-image">
+                <div class="product-info">
+                    <h2 class="product-title">Kashmir Sapphire Earrings</h2>
+                    <p>Rare matching pair of Kashmir sapphires in classic drop design.</p>
+                    <ul class="specifications">
+                        <li>• Sapphire Weight: 4.2 carats total</li>
+                        <li>• Diamond Accents: 0.8 carats</li>
+                        <li>• Metal: Platinum</li>
+                        <li>• Length: 1.5 inches</li>
+                    </ul>
+                    <div class="price-info">
+                        <p><strong>Starting Bid:</strong> ₹42,000</p>
+                        <p><strong>Current Bid:</strong> ₹44,500</p>
+                        <p><strong>Minimum Increment:</strong> ₹1,000</p>
+                    </div>
+                    <button class="bid-button">Place Bid</button>
+                    <p class="certification">AGL Certified</p>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <img src="./img/emrald.jpg" alt="Emerald Bracelet" class="product-image">
+                <div class="product-info">
+                    <h2 class="product-title">Colombian Emerald Bracelet</h2>
+                    <p>Art Deco-inspired bracelet featuring five matched Colombian emeralds.</p>
+                    <ul class="specifications">
+                        <li>• Emerald Weight: 8.5 carats total</li>
+                        <li>• Diamond Weight: 2.2 carats</li>
+                        <li>• Metal: Platinum</li>
+                        <li>• Length: 7 inches</li>
+                    </ul>
+                    <div class="price-info">
+                        <p><strong>Starting Bid:</strong> ₹55,000</p>
+                        <p><strong>Current Bid:</strong> ₹57,200</p>
+                        <p><strong>Minimum Increment:</strong> ₹1,000</p>
+                    </div>
+                    <button class="bid-button">Place Bid</button>
+                    <p class="certification">Gübelin Certified</p>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <img src="./img/pearl.jpg" alt="Pearl Necklace" class="product-image">
+                <div class="product-info">
+                    <h2 class="product-title">Natural Pearl Necklace</h2>
+                    <p>Single strand of graduated natural pearls with diamond clasp.</p>
+                    <ul class="specifications">
+                        <li>• Pearl Size: 4-8mm</li>
+                        <li>• Number of Pearls: 51</li>
+                        <li>• Clasp: Diamond and Platinum</li>
+                        <li>• Length: 17 inches</li>
+                    </ul>
+                    <div class="price-info">
+                        <p><strong>Starting Bid:</strong> ₹28,000</p>
+                        <p><strong>Current Bid:</strong> ₹29,500</p>
+                        <p><strong>Minimum Increment:</strong> ₹500</p>
+                    </div>
+                    <button class="bid-button">Place Bid</button>
+                    <p class="certification">SSEF Certified</p>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <img src="./img/belle.jpg" alt="Diamond Brooch" class="product-image">
+                <div class="product-info">
+                    <h2 class="product-title">Belle Époque Diamond Brooch</h2>
+                    <p>Exquisite diamond and platinum bow brooch from the Belle Époque period.</p>
+                    <ul class="specifications">
+                        <li>• Diamond Weight: 5.8 carats</li>
+                        <li>• Metal: Platinum</li>
+                        <li>• Circa 1910</li>
+                        <li>• Width: 2.5 inches</li>
+                    </ul>
+                    <div class="price-info">
+                        <p><strong>Starting Bid:</strong> ₹22,000</p>
+                        <p><strong>Current Bid:</strong> ₹24,500</p>
+                        <p><strong>Minimum Increment:</strong> ₹500</p>
+                    </div>
+                    <button class="bid-button">Place Bid</button>
+                    <p class="certification">Original Box Included</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

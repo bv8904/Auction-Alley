@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electronics</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+    
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    
+        h1 {
+            font-size: 36px;
+            margin: 0;
+        }
+    
+        p {
+            font-size: 18px;
+        }
+    
+        /* Product Grid Styles */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            justify-items: center;
+            padding: 1rem;
+        }
+    
+        .product-card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            width: 100%;
+            box-sizing: border-box;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #ddd;
+        }
+    
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
+        }
+    
+        .product-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+    
+        .product-title {
+            font-size: 24px;
+            color: #34495e;
+            margin: 10px 0;
+            font-weight: 600;
+        }
+    
+        .product-info p {
+            font-size: 16px;
+            color: #7f8c8d;
+        }
+    
+        .price-info {
+            background-color: #ecf0f1;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            color: #34495e;
+        }
+    
+        .price-info strong {
+            color: #2c3e50;
+        }
+    
+        .timer {
+            font-size: 14px;
+            font-weight: bold;
+            color: #e74c3c;
+            margin-top: 10px;
+        }
+    
+        /* Bid Button */
+        .bid-button {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+    
+        .bid-button:hover {
+            background-color: #27ae60;
+        }
+    
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+        }
+    
+        .modal-content {
+            background-color: #ffffff;
+            margin: 15% auto;
+            padding: 25px;
+            border-radius: 8px;
+            width: 400px;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+    
+        .modal-header {
+            margin-bottom: 20px;
+            text-align: center;
+            color: #34495e;
+            font-size: 24px;
+            font-weight: bold;
+        }
+    
+        .modal-body {
+            margin-bottom: 20px;
+        }
+    
+        .modal-footer {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+    
+        .modal-button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+    
+        .confirm-button {
+            background-color: #2ecc71;
+            color: white;
+        }
+    
+        .cancel-button {
+            background-color: #e74c3c;
+            color: white;
+        }
+    
+        .modal-button:hover {
+            background-color: #27ae60;
+        }
+    
+        .cancel-button:hover {
+            background-color: #c0392b;
+        }
+    
+        .close {
+            position: absolute;
+            right: 15px;
+            top: 10px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+    
+        .close:hover {
+            color: #e74c3c;
+        }
+    
+        /* Error Message */
+        .error-message {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+    
+        /* Responsive Layout */
+        @media screen and (max-width: 768px) {
+            header {
+                padding: 15px;
+            }
+    
+            h1 {
+                font-size: 28px;
+            }
+    
+            .product-title {
+                font-size: 20px;
+            }
+    
+            .price-info p, .product-info p {
+                font-size: 14px;
+            }
+        }
+    
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Electronics</h1>
+        <p>Bid on Premium Electronic Products</p>
+    </header>
+
+    <div class="container">
+        <div class="products-grid">
+            <div class="product-card" id="product1">
+                <img src="./img/MacBook_Pro_16_in_M3_Pro_Max_Space_Black_PDP_Image_Position_1__en-IN_bd6f638a-3983-4322-a6fa-a18a67d5487c.webp" alt="MacBook Pro" class="product-image">
+                <div class="product-info">
+                    <h2 class="product-title">MacBook Pro 16"</h2>
+                    <p>Latest model with M2 chip, 16GB RAM, 512GB SSD. Perfect for professionals.</p>
+                    <div class="price-info">
+                        <p><strong>Base Price:</strong> ₹1,499</p>
+                        <p><strong>Current Bid:</strong> ₹<span id="currentBid1">1,550</span></p>
+                        <p><strong>Minimum Increment:</strong> ₹50</p>
+                    </div>
+                    <div class="timer" id="timer1">Loading timer...</div>
+                    <div class="error-message" id="error1"></div>
+                    <button class="bid-button" onclick="openBidModal(1, 1550, 50)">Bid Now</button>
+                </div>
+            </div>
+
+            <div class="product-card" id="product2">
+                <img src="./img/sonywh.jpeg" alt="Sony WH-1000XM4" class="product-image">
+                <div class="product-info">
+                    <h2 class="product-title">Sony WH-1000XM4</h2>
+                    <p>Premium noise-cancelling headphones with industry-leading sound quality and battery life.</p>
+                    <div class="price-info">
+                        <p><strong>Base Price:</strong> ₹299</p>
+                        <p><strong>Current Bid:</strong> ₹<span id="currentBid2">320</span></p>
+                        <p><strong>Minimum Increment:</strong> ₹10</p>
+                    </div>
+                    <div class="timer" id="timer2">Loading timer...</div>
+                    <div class="error-message" id="error2"></div>
+                     <button class="bid-button" onclick="openBidModal(2, 320, 10)">Bid Now</button>
+                </div>
+            </div>
+
+            <div class="product-card" id="product3">
+                <img src="./img/sonos.png" alt="Sonos One" class="product-image">
+                <div class="product-info">
+                    <h2 class="product-title">Sonos One Smart Speaker</h2>
+                    <p>Rich, room-filling sound with voice control and multi-room audio support.</p>
+                    <div class="price-info">
+                        <p><strong>Base Price:</strong> ₹199</p>
+                        <p><strong>Current Bid:</strong> ₹<span id="currentBid3">215</span></p>
+                        <p><strong>Minimum Increment:</strong> ₹5</p>
+                    </div>
+                    <div class="timer" id="timer3">Loading timer...</div>
+                    <div class="error-message" id="error3"></div>
+                    <button class="bid-button" onclick="openBidModal(3, 215, 5)">Bid Now</button>
+                </div>
+            </div>
+
+            <!-- Additional Product Cards -->
+            <div class="product-card" id="product4">
+                <img src="./img/airpods.jpg" alt="Airpods Pro" class="product-image">
+                <div class="product-info">
+                    <h2 class="product-title">Airpods Pro</h2>
+                    <p>Noise Cancel.</p>
+                    <div class="price-info">
+                        <p><strong>Base Price:</strong> ₹500</p>
+                        <p><strong>Current Bid:</strong> ₹<span id="currentBid4">530</span></p>
+                        <p><strong>Minimum Increment:</strong> ₹30</p>
+                    </div>
+                    <div class="timer" id="timer4">Loading timer...</div>
+                    <div class="error-message" id="error4"></div>
+                    <button class="bid-button" onclick="openBidModal(4, 530, 30)">Bid Now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Popup -->
+    <div id="bidModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeBidModal()">&times;</span>
+            <div class="modal-header">Place Your Bid</div>
+            <div class="modal-body">
+                <p>Enter your bid amount:</p>
+                <input type="number" id="newBidAmount" placeholder="Enter new bid">
+            </div>
+            <div class="modal-footer">
+                <button onclick="submitBid()">Submit Bid</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentBid = 0;
+        let productIndex = 0;
+        let timers = [];
+
+        // Set the countdown timer for each product
+        function startTimer(productIndex, duration) {
+            let timerElement = document.getElementById(`timer₹{productIndex}`);
+            let timeLeft = duration;
+
+            timers[productIndex] = setInterval(() => {
+                let minutes = Math.floor(timeLeft / 60);
+                let seconds = timeLeft % 60;
+                timerElement.textContent = `₹{String(minutes).padStart(2, '0')}:₹{String(seconds).padStart(2, '0')}`;
+                timeLeft--;
+
+                if (timeLeft < 0) {
+                    clearInterval(timers[productIndex]);
+                    timerElement.textContent = "Auction ended";
+                }
+            }, 1000);
+        }
+
+        // Start timers for each product
+        startTimer(1, 6000); // 10 minutes for product 1
+        startTimer(2, 4500); // 10 minutes for product 2
+        startTimer(3, 3800); // 10 minutes for product 3
+        startTimer(4, 4200); // 10 minutes for product 4
+
+        function openBidModal(index, bidAmount, increment) {
+            productIndex = index;
+            currentBid = bidAmount;
+            document.getElementById("newBidAmount").value = bidAmount + increment;
+            document.getElementById("bidModal").style.display = "block";
+        }
+
+        function closeBidModal() {
+            document.getElementById("bidModal").style.display = "none";
+        }
+
+        function submitBid() {
+            let newBid = parseInt(document.getElementById("newBidAmount").value);
+            if (newBid <= currentBid) {
+                document.getElementById(`error₹{productIndex}`).textContent = "Bid must be higher than current bid!";
+            } else {
+                currentBid = newBid;
+                document.getElementById(`currentBid₹{productIndex}`).textContent = currentBid;
+                closeBidModal();
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NFT Auction House</title>
+    <style>
+                * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .product-info {
+            text-align: center;
+        }
+
+        .product-title {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .price-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .bid-button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .bid-button:hover {
+            background-color: #45a049;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            min-width: 300px;
+        }
+
+        .close-button {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            font-size: 20px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .timer {
+            text-align: center;
+            font-size: 1.2em;
+            margin: 10px 0;
+            color: #e74c3c;
+        }
+
+        .bid-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .bid-input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.9em;
+            display: none;
+        }
+
+
+        .crypto-info {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #4ecdc4;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>NFT Auction House</h1>
+        <div class="product-grid" id="productGrid">
+            <!-- NFTs will be dynamically added here -->
+        </div>
+    </div>
+
+    <!-- Bidding Modal -->
+    <div class="modal" id="bidModal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle"></h2>
+            <p class="collection-name" id="modalCollection"></p>
+            <div class="timer" id="timer"></div>
+            <div class="bid-form">
+                <p>Current Bid: <span class="crypto-info"><span id="currentBid">0</span> ETH</span></p>
+                <p>Floor Price: <span class="crypto-info"><span id="basePrice">0</span> ETH</span></p>
+                <input type="number" id="bidAmount" class="bid-input" placeholder="Enter bid in ETH" step="0.01">
+                <p class="error-message" id="errorMessage"></p>
+                <button class="bid-button" onclick="placeBid()">Place Bid</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // NFT data
+        const products = [
+            {
+                id: 1,
+                title: "Cosmic Dreamer #1337",
+                collection: "Cosmic Dreamers",
+                image: "img/cosmic.jpg",
+                basePrice: 0.5,
+                currentBid: 0.5,
+                endTime: new Date().getTime() + 3600000
+            },
+            {
+                id: 2,
+                title: "Pixel Punk #8888",
+                collection: "CryptoPunks",
+                image: "img/pixel.jpg",
+                basePrice: 2.0,
+                currentBid: 2.0,
+                endTime: new Date().getTime() + 7200000
+            },
+            {
+                id: 3,
+                title: "Space Ape #4242",
+                collection: "Bored Space Club",
+                image: "img/space.jpeg",
+                basePrice: 1.5,
+                currentBid: 1.5,
+                endTime: new Date().getTime() + 3600000
+            },
+            {
+                id: 4,
+                title: "Meta Dragon #777",
+                collection: "Metaverse Dragons",
+                image: "img/metadrag.jpg",
+                basePrice: 0.8,
+                currentBid: 0.8,
+                endTime: new Date().getTime() + 3600000
+            },
+            {
+                id: 5,
+                title: "Digital Wave #420",
+                collection: "Digital Waves",
+                image: "img/waves.jpg",
+                basePrice: 1.2,
+                currentBid: 1.2,
+                endTime: new Date().getTime() + 3600000
+            },
+            {
+                id: 6,
+                title: "Cyber Cat #9999",
+                collection: "Cyber Cats Society",
+                image: "img/cats.jpg",
+                basePrice: 0.7,
+                currentBid: 0.7,
+                endTime: new Date().getTime() + 3600000
+            },
+            {
+                id: 7,
+                title: "Art Block #2345",
+                collection: "Art Blocks Curated",
+                image: "img/art.png",
+                basePrice: 3.0,
+                currentBid: 3.0,
+                endTime: new Date().getTime() + 3600000
+            },
+            {
+                id: 8,
+                title: "Doodle #6789",
+                collection: "Doodles",
+                image: "img/doodle.png",
+                basePrice: 1.8,
+                currentBid: 1.8,
+                endTime: new Date().getTime() + 3600000
+            }
+        ];
+
+        let selectedProduct = null;
+        let timerInterval = null;
+
+        // Function to load local images
+        function loadLocalImage(imagePath) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.onload = () => resolve(img);
+                img.onerror = () => {
+                    console.warn(`Failed to load image: ${imagePath}`);
+                    resolve('https://via.placeholder.com/200');
+                };
+                img.src = imagePath;
+            });
+        }
+
+        // Initialize the NFT grid
+        function initializeProducts() {
+            const productGrid = document.getElementById('productGrid');
+            
+            const productCards = products.map(product => `
+                <div class="product-card">
+                    <img src="${product.image}" 
+                         alt="${product.title}" 
+                         class="product-image">
+                    <div class="product-info">
+                        <h3 class="product-title">${product.title}</h3>
+                        <p class="collection-name">${product.collection}</p>
+                        <div class="price-info">
+                            <span>Floor: ${product.basePrice} ETH</span>
+                            <span>Current: <span id="current-${product.id}">${product.currentBid}</span> ETH</span>
+                        </div>
+                        <button class="bid-button" onclick="openBidModal(${product.id})">Place Bid</button>
+                    </div>
+                </div>
+            `);
+            
+            productGrid.innerHTML = productCards.join('');
+        }
+
+        function openBidModal(productId) {
+            selectedProduct = products.find(p => p.id === productId);
+            const modal = document.getElementById('bidModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalCollection = document.getElementById('modalCollection');
+            const currentBid = document.getElementById('currentBid');
+            const basePrice = document.getElementById('basePrice');
+
+            modalTitle.textContent = selectedProduct.title;
+            modalCollection.textContent = selectedProduct.collection;
+            currentBid.textContent = selectedProduct.currentBid;
+            basePrice.textContent = selectedProduct.basePrice;
+            modal.style.display = 'block';
+
+            updateTimer();
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('bidModal');
+            modal.style.display = 'none';
+            if (timerInterval) clearInterval(timerInterval);
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+
+        function updateTimer() {
+            if (!selectedProduct) return;
+
+            const now = new Date().getTime();
+            const distance = selectedProduct.endTime - now;
+
+            const hours = Math.floor(distance / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('timer').textContent = 
+                `Auction Ends In: ${hours}h ${minutes}m ${seconds}s`;
+
+            if (distance < 0) {
+                clearInterval(timerInterval);
+                document.getElementById('timer').textContent = "AUCTION ENDED";
+            }
+        }
+
+        function placeBid() {
+            const bidAmount = parseFloat(document.getElementById('bidAmount').value);
+            const errorMessage = document.getElementById('errorMessage');
+
+            if (isNaN(bidAmount) || bidAmount <= selectedProduct.currentBid) {
+                errorMessage.textContent = "Bid must be higher than current bid";
+                errorMessage.style.display = 'block';
+                return;
+            }
+
+            const minBid = selectedProduct.currentBid * 1.1;
+            if (bidAmount < minBid) {
+                errorMessage.textContent = `Minimum bid must be at least ${minBid.toFixed(2)} ETH`;
+                errorMessage.style.display = 'block';
+                return;
+            }
+
+            selectedProduct.currentBid = bidAmount;
+            document.getElementById(`current-${selectedProduct.id}`).textContent = bidAmount;
+            document.getElementById('currentBid').textContent = bidAmount;
+            errorMessage.style.display = 'none';
+
+            alert('Bid placed successfully! Transaction pending...');
+        }
+
+        // Initialize the page
+        initializeProducts();
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('bidModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>

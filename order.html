@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f0f4f8;
+        }
+
+        .orders-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .orders-header {
+            background-color:  #17202a;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(133, 77, 14, 0.2);
+        }
+
+        .orders-header h1 {
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            background-color: #b0c4d9;
+            padding: 0.5rem;
+            border-radius: 8px;
+        }
+
+        .tab {
+        font-size: 1.25em; /* Increase this value as needed */
+        font-weight: bold; /* Optional: Make it bold for better visibility */
+        padding: 10px 20px; /* Optional: Increase padding for a larger clickable area */
+        }
+
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            background: #b0c4d9;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--primary-dark);
+            transition: all 0.3s ease;
+        }
+
+        .tab:hover {
+            background-color: rgba(175, 200, 229, 0.928);
+        }
+
+        .tab.active {
+            background-color:  #17202a;
+            color:  #fffcfc;
+        }
+
+        .section {
+            margin-bottom: 2rem;
+        }
+
+        .section h2 {
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+            padding-left: 0.5rem;
+            border-left: 4px solid var(--primary-dark);
+        }
+
+        .order-item {
+            background:  #b0c4d9;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(133, 77, 14, 0.1);
+            border: 1px solid var(--gold-medium);
+            transition: transform 0.2s ease;
+        }
+
+        .order-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(133, 77, 14, 0.15);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+    .order-id {
+        font-size: 1.5em; /* Increase this value as needed */
+        font-weight: bold; /* Optional: Make it bold for better visibility */
+        color:#000000;
+        }
+
+        .order-date {
+            color: #000000;
+            font-size: 1.5rem;
+        }
+
+        .order-status {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            background-color: #fdfdfd;
+            color: #000000;
+            border: 1px solid var(--primary-dark);
+        }
+
+        .status-delivered {
+            background-color: #f0fdf4;
+            color: #16a34a;
+        }
+
+        .status-transit {
+            background-color: #f0f0f0;
+            color: #000000;
+        }
+
+        .order-details {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--gold-medium);
+            font-size: larger;
+        }
+
+        .order-items {
+            list-style: none;
+        }
+
+        .order-items li {
+            margin-bottom: 0.5rem;
+            color: #000000;;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .order-items li::before {
+            content: "•";
+            color: var(--primary-dark);
+            position: absolute;
+            left: 0.5rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color:  #ffffff;
+            color:  #000000;
+        }
+
+        .btn-primary:hover {
+            background-color: #000000;
+            color: #ffffff;
+        }
+
+        .btn-secondary {
+            background-color:  #ffffff;
+            color:  #000000;
+        }
+
+        .btn-secondary:hover {
+            background-color: #000000;
+            color: #ffffff;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .delivery-info {
+            margin-top: 1rem;
+            font-size: 1.5rem;
+            color: #000000;
+            padding: 0.5rem;
+            background-color: var(--gold-light);
+            border-radius: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .orders-header {
+                padding: 1rem;
+            }
+
+            .order-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+
+            .tabs {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="orders-container">
+        <div class="orders-header">
+            <h1>Order Management</h1>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active">Pending Orders</button>
+            <button class="tab">Order History</button>
+        </div>
+
+        <div class="section" id="pending-orders">
+            <h2>Pending Orders</h2>
+            
+            <div class="order-item">
+                <div class="order-header">
+                    <span class="order-id">Order #12346</span>
+                    <span class="order-date">Placed on: Oct 25, 2024</span>
+                </div>
+                <span class="order-status status-transit">In Transit</span>
+                <div class="order-details">
+                    <ul class="order-items">
+                        <li>Gaming Laptop</li>
+                        <li>Mouse Pad</li>
+                    </ul>
+                    <div class="delivery-info">
+                        Estimated Delivery: Nov 1, 2024
+                    </div>
+                    <div class="btn-group">
+                        <a href="#" class="btn btn-primary">Track Order</a>
+                        <a href="#" class="btn btn-secondary">View Details</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="order-item">
+                <div class="order-header">
+                    <span class="order-id">Order #12347</span>
+                    <span class="order-date">Placed on: Oct 23, 2024</span>
+                </div>
+                <span class="order-status status-pending">Processing</span>
+                <div class="order-details">
+                    <ul class="order-items">
+                        <li>Wireless Headphones</li>
+                    </ul>
+                    <div class="delivery-info">
+                        Estimated Delivery: Oct 31, 2024
+                    </div>
+                    <div class="btn-group">
+                        <a href="#" class="btn btn-primary">Track Order</a>
+                        <a href="#" class="btn btn-secondary">View Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="order-history">
+            <h2>Order History</h2>
+            
+            <div class="order-item">
+                <div class="order-header">
+                    <span class="order-id">Order #12345</span>
+                    <span class="order-date">Placed on: Oct 20, 2024</span>
+                </div>
+                <span class="order-status status-delivered">Delivered</span>
+                <div class="order-details">
+                    <ul class="order-items">
+                        <li>Mechanical Keyboard</li>
+                        <li>USB Cable</li>
+                    </ul>
+                    <div class="btn-group">
+                        <a href="#" class="btn btn-secondary">View Details</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="order-item">
+                <div class="order-header">
+                    <span class="order-id">Order #12344</span>
+                    <span class="order-date">Placed on: Sep 15, 2024</span>
+                </div>
+                <span class="order-status status-delivered">Delivered</span>
+                <div class="order-details">
+                    <ul class="order-items">
+                        <li>Monitor Stand</li>
+                        <li>HDMI Cable</li>
+                    </ul>
+                    <div class="btn-group">
+                        <a href="#" class="btn btn-secondary">View Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple tab switching functionality
+        const tabs = document.querySelectorAll('.tab');
+        const sections = document.querySelectorAll('.section');
+        
+        tabs.forEach((tab, index) => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs
+                tabs.forEach(t => t.classList.remove('active'));
+                // Add active class to clicked tab
+                tab.classList.add('active');
+                
+                // Hide all sections
+                sections.forEach(section => {
+                    section.style.display = 'none';
+                });
+                // Show selected section
+                sections[index].style.display = 'block';
+            });
+        });
+
+        // Initialize - hide order history section
+        sections[1].style.display = 'none';
+    </script>
+</body>
+</html>

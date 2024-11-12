@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Props Auction</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .product-info {
+            text-align: center;
+        }
+
+        .product-title {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .price-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .bid-button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .bid-button:hover {
+            background-color: #45a049;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            min-width: 300px;
+        }
+
+        .close-button {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            font-size: 20px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .timer {
+            text-align: center;
+            font-size: 1.2em;
+            margin: 10px 0;
+            color: #e74c3c;
+        }
+
+        .bid-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .bid-input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.9em;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Movie Props Auction</h1>
+        <div class="product-grid" id="productGrid">
+            <!-- Products will be dynamically added here -->
+        </div>
+    </div>
+
+    <!-- Bidding Modal -->
+    <div class="modal" id="bidModal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle"></h2>
+            <div class="timer" id="timer"></div>
+            <div class="bid-form">
+                <p>Current Bid: $<span id="currentBid">0</span></p>
+                <p>Base Price: $<span id="basePrice">0</span></p>
+                <input type="number" id="bidAmount" class="bid-input" placeholder="Enter your bid">
+                <p class="error-message" id="errorMessage"></p>
+                <button class="bid-button" onclick="placeBid()">Place Bid</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Product data with local image paths
+        const products = [
+            {
+                id: 1,
+                title: "Indiana Jones Grail Diary",
+                image: "img/indiana.webp",
+                basePrice: 1000,
+                currentBid: 1000,
+                endTime: new Date().getTime() + 3600000
+            },
+            {
+                id: 2,
+                title: "Philosophers Stone Signed Movie Script",
+                image: "img/hp.webp",
+                basePrice: 2000,
+                currentBid: 2000,
+                endTime: new Date().getTime() + 7200000
+            },
+            {
+                id: 3,
+                title: "Jurassic Park Dinosaur Embryo Jar",
+                image: "img/jurassic.webp",
+                basePrice: 1000,
+                currentBid: 1000,
+                endTime: new Date().getTime() + 3600000
+            },
+            {
+                id: 4,
+                title: "Flying Dutchman Ship in a Bottle Ghost Ship Mode",
+                image: "img/flyingdutchman.webp",
+                basePrice: 1000,
+                currentBid: 1000,
+                endTime: new Date().getTime() + 3600000
+            },
+            {
+                id: 5,
+                title: "Zorro 911 Gold Constantine Lighter",
+                image: "img/zorro.webp",
+                basePrice: 1000,
+                currentBid: 1000,
+                endTime: new Date().getTime() + 3600000
+            },
+            {
+                id: 6,
+                title: "Shawshank Prison Antique Lock Movie",
+                image: "img/shawshank.webp",
+                basePrice: 1000,
+                currentBid: 1000,
+                endTime: new Date().getTime() + 3600000
+            },
+            {
+                id: 7,
+                title: "RDJ signed helmet",
+                image: "img/rdj.jpeg",
+                basePrice: 1000,
+                currentBid: 1000,
+                endTime: new Date().getTime() + 3600000
+            },
+            {
+                id: 8,
+                title: "Alien Jar Xenomorph Specimen",
+                image: "img/xeno.avif",
+                basePrice: 1000,
+                currentBid: 1000,
+                endTime: new Date().getTime() + 3600000
+            }
+        ];
+
+        let selectedProduct = null;
+        let timerInterval = null;
+
+        // Function to load local images
+        function loadLocalImage(imagePath) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.onload = () => resolve(img);
+                img.onerror = () => {
+                    console.warn(`Failed to load image: ${imagePath}`);
+                    resolve('https://via.placeholder.com/200');
+                };
+                img.src = imagePath;
+            });
+        }
+
+        // Initialize the product grid with image handling
+        async function initializeProducts() {
+            const productGrid = document.getElementById('productGrid');
+            
+            const productCards = await Promise.all(products.map(async product => {
+                try {
+                    await loadLocalImage(product.image);
+                    return `
+                        <div class="product-card">
+                            <img src="${product.image}" 
+                                 alt="${product.title}" 
+                                 class="product-image"
+                                 onerror="this.src='https://via.placeholder.com/200'"
+                            >
+                            <div class="product-info">
+                                <h3 class="product-title">${product.title}</h3>
+                                <div class="price-info">
+                                    <span>Base: $${product.basePrice}</span>
+                                    <span>Current: $<span id="current-${product.id}">${product.currentBid}</span></span>
+                                </div>
+                                <button class="bid-button" onclick="openBidModal(${product.id})">Place Bid</button>
+                            </div>
+                        </div>
+                    `;
+                } catch (error) {
+                    console.error(`Error loading image for ${product.title}:`, error);
+                    return `
+                        <div class="product-card">
+                            <img src="https://via.placeholder.com/200" 
+                                 alt="${product.title}" 
+                                 class="product-image">
+                            <div class="product-info">
+                                <h3 class="product-title">${product.title}</h3>
+                                <div class="price-info">
+                                    <span>Base: $${product.basePrice}</span>
+                                    <span>Current: $<span id="current-${product.id}">${product.currentBid}</span></span>
+                                </div>
+                                <button class="bid-button" onclick="openBidModal(${product.id})">Place Bid</button>
+                            </div>
+                        </div>
+                    `;
+                }
+            }));
+            
+            productGrid.innerHTML = productCards.join('');
+        }
+
+        function openBidModal(productId) {
+            selectedProduct = products.find(p => p.id === productId);
+            const modal = document.getElementById('bidModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const currentBid = document.getElementById('currentBid');
+            const basePrice = document.getElementById('basePrice');
+
+            modalTitle.textContent = selectedProduct.title;
+            currentBid.textContent = selectedProduct.currentBid;
+            basePrice.textContent = selectedProduct.basePrice;
+            modal.style.display = 'block';
+
+            updateTimer();
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('bidModal');
+            modal.style.display = 'none';
+            if (timerInterval) clearInterval(timerInterval);
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+
+        function updateTimer() {
+            if (!selectedProduct) return;
+
+            const now = new Date().getTime();
+            const distance = selectedProduct.endTime - now;
+
+            const hours = Math.floor(distance / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('timer').textContent = 
+                `Time Remaining: ${hours}h ${minutes}m ${seconds}s`;
+
+            if (distance < 0) {
+                clearInterval(timerInterval);
+                document.getElementById('timer').textContent = "AUCTION ENDED";
+            }
+        }
+
+        function placeBid() {
+            const bidAmount = parseFloat(document.getElementById('bidAmount').value);
+            const errorMessage = document.getElementById('errorMessage');
+
+            if (isNaN(bidAmount) || bidAmount <= selectedProduct.currentBid) {
+                errorMessage.textContent = "Bid must be higher than current bid";
+                errorMessage.style.display = 'block';
+                return;
+            }
+
+            const minBid = selectedProduct.basePrice * 1.25;
+            if (bidAmount < minBid) {
+                errorMessage.textContent = `Minimum bid must be at least $${minBid}`;
+                errorMessage.style.display = 'block';
+                return;
+            }
+
+            selectedProduct.currentBid = bidAmount;
+            document.getElementById(`current-${selectedProduct.id}`).textContent = bidAmount;
+            document.getElementById('currentBid').textContent = bidAmount;
+            errorMessage.style.display = 'none';
+
+            alert('Bid placed successfully!');
+        }
+
+        // Initialize the page
+        initializeProducts();
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('bidModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>

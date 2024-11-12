@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fashion Auction</title>
+    <style>
+        /* Same base styles as electronics page */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f0f4f8;
+        }
+
+        header {
+            background-color: #2c3e50;
+            color: #f0f4f8;
+            text-align: center;
+            padding: 2rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .product-card {
+            border: 1px solid #29343c;
+            border-radius: 8px;
+            padding: 1rem;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
+            border-radius: 4px;
+        }
+
+        .product-info {
+            margin: 1rem 0;
+        }
+
+        .product-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+
+        .product-info p {
+            color: #29343c;
+            line-height: 1.5;
+        }
+
+        .price-info {
+            color: #29343c;
+            margin: 0.5rem 0;
+            padding: 0.5rem;
+            background-color: #f0f4f8;
+            border-radius: 4px;
+        }
+
+        .bid-button {
+            background-color: #2c3e50;
+            color: #f0f4f8;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .bid-button:hover {
+            background-color: #29343c;
+        }
+
+        /* Popup Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            overflow: auto;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+            border-radius: 8px;
+        }
+
+        .modal-header {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .modal-body {
+            margin-bottom: 20px;
+        }
+
+        .modal-footer {
+            text-align: right;
+        }
+
+        .modal input[type="number"] {
+            padding: 0.5rem;
+            font-size: 1rem;
+            margin-right: 10px;
+            width: 150px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .modal button {
+            padding: 0.6rem 1rem;
+            font-size: 1rem;
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .modal button:hover {
+            background-color: #29343c;
+        }
+
+        /* Close Button */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Fashion</h1>
+        <p>Bid on Premium Fashion Items</p>
+    </header>
+
+    <div class="container">
+        <div class="products-grid">
+            <!-- Product Cards -->
+            <div class="product-card" id="product1">
+                <img src="./img/gggucci.webp" alt="Gucci Bag" class="product-image">
+                <div class="product-info">
+                    <h2 class="product-title">Gucci GG Marmont Bag</h2>
+                    <p>Luxury matelassé leather shoulder bag with double G hardware. Perfect condition.</p>
+                    <div class="price-info">
+                        <p><strong>Base Price:</strong> ₹1,899</p>
+                        <p><strong>Current Bid:</strong> ₹<span id="currentBid1">1,950</span></p>
+                        <p><strong>Minimum Increment:</strong> ₹50</p>
+                    </div>
+                    <button class="bid-button" onclick="openBidModal(1)">Bid Now</button>
+                    <div class="timer" id="timer1">Loading timer...</div>
+                </div>
+            </div>
+
+            <div class="product-card" id="product2">
+                <img src="./img/rolex.png" alt="Rolex Watch" class="product-image">
+                <div class="product-info">
+                    <h2 class="product-title">Rolex Datejust 41</h2>
+                    <p>Stainless steel case, blue dial, fluted bezel. Complete with box and papers.</p>
+                    <div class="price-info">
+                        <p><strong>Base Price:</strong> ₹8,999</p>
+                        <p><strong>Current Bid:</strong> ₹<span id="currentBid2">9,200</span></p>
+                        <p><strong>Minimum Increment:</strong> ₹100</p>
+                    </div>
+                    <button class="bid-button" onclick="openBidModal(2)">Bid Now</button>
+                    <div class="timer" id="timer2">Loading timer...</div>
+                </div>
+            </div>
+
+            <div class="product-card" id="product3">
+                <img src="./img/christianlouboutin.jpg" alt="Designer Shoes" class="product-image">
+                <div class="product-info">
+                    <h2 class="product-title">Christian Louboutin Pumps</h2>
+                    <p>Classic black patent leather with signature red sole. Size 38, never worn.</p>
+                    <div class="price-info">
+                        <p><strong>Base Price:</strong> ₹599</p>
+                        <p><strong>Current Bid:</strong> ₹<span id="currentBid3">645</span></p>
+                        <p><strong>Minimum Increment:</strong> ₹25</p>
+                    </div>
+                    <button class="bid-button" onclick="openBidModal(3)">Bid Now</button>
+                    <div class="timer" id="timer3">Loading timer...</div>
+                </div>
+            </div>
+
+            <div class="product-card" id="product4">
+                <img src="./img/suit.jpg" alt="Designer Suit" class="product-image">
+                <div class="product-info">
+                    <h2 class="product-title">Tom Ford Suit</h2>
+                    <p>Bespoke wool-blend suit in navy, slim fit. Italian craftsmanship at its finest.</p>
+                    <div class="price-info">
+                        <p><strong>Base Price:</strong> ₹2,499</p>
+                        <p><strong>Current Bid:</strong> ₹<span id="currentBid4">2,600</span></p>
+                        <p><strong>Minimum Increment:</strong> ₹50</p>
+                    </div>
+                    <button class="bid-button" onclick="openBidModal(4)">Bid Now</button>
+                    <div class="timer" id="timer4">Loading timer...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Popup -->
+    <div id="bidModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeBidModal()">&times;</span>
+            <div class="modal-header">
+                <h2>Place Your Bid</h2>
+            </div>
+            <div class="modal-body">
+                <label for="bidAmount">Enter your bid:</label>
+                <input type="number" id="bidAmount" min="0" step="1" required>
+                <span id="currentBidModal">Current bid: ₹</span>
+            </div>
+            <div class="modal-footer">
+                <button onclick="placeBid()">Place Bid</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Example timer for each product
+        const timers = [
+            document.getElementById('timer1'),
+            document.getElementById('timer2'),
+            document.getElementById('timer3'),
+            document.getElementById('timer4')
+        ];
+
+        function startTimer(productIndex, endTime) {
+            const timerElement = timers[productIndex];
+            const interval = setInterval(function() {
+                const now = new Date().getTime();
+                const distance = endTime - now;
+
+                if (distance < 0) {
+                    clearInterval(interval);
+                    timerElement.innerHTML = "Auction ended";
+                } else {
+                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                    timerElement.innerHTML = hours + "h " + minutes + "m " + seconds + "s";
+                }
+            }, 1000);
+        }
+
+        // Start timers for each product (for demonstration, set the auction end time 1 hour from now)
+        const auctionEndTimes = [
+            new Date().getTime() + 60 * 60 * 1000,
+            new Date().getTime() + 60 * 60 * 1000,
+            new Date().getTime() + 60 * 60 * 1000,
+            new Date().getTime() + 60 * 60 * 1000
+        ];
+
+        auctionEndTimes.forEach((endTime, index) => startTimer(index, endTime));
+
+        let currentProductIndex = null;
+        function openBidModal(productIndex) {
+            currentProductIndex = productIndex;
+            const currentBid = document.getElementById('currentBid' + productIndex).textContent;
+            document.getElementById('currentBidModal').textContent = 'Current bid: ₹' + currentBid;
+            document.getElementById('bidModal').style.display = "block";
+        }
+
+        function closeBidModal() {
+            document.getElementById('bidModal').style.display = "none";
+        }
+
+        function placeBid() {
+            const bidAmount = document.getElementById('bidAmount').value;
+            if (bidAmount > parseFloat(document.getElementById('currentBid' + currentProductIndex).textContent)) {
+                document.getElementById('currentBid' + currentProductIndex).textContent = bidAmount;
+                closeBidModal();
+            } else {
+                alert("Bid must be higher than the current bid.");
+            }
+        }
+    </script>
+</body>
+</html>

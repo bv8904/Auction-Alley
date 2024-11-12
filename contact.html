@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - AuctionAlley</title>
+    <style>
+        /* CSS for styling the page with the new color palette */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f4f8;
+            color: #2c3e50;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        h2 {
+            color: #29343c;
+            margin-top: 20px;
+            border-left: 4px solid #2c3e50;
+            padding-left: 8px;
+        }
+        .contact-info {
+            margin: 15px 0;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+        .contact-info span {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .social-icons {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .social-button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 1em;
+            font-weight: bold;
+            color: #ffffff;
+            background-color: #2c3e50;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .social-button:hover {
+            background-color: #29343c;
+            transform: translateY(-3px);
+        }
+        .contact-form {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f0f4f8;
+            border-radius: 8px;
+        }
+        .contact-form input, .contact-form textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            transition: border-color 0.3s;
+        }
+        .contact-form input:focus, .contact-form textarea:focus {
+            border-color: #2c3e50;
+            outline: none;
+        }
+        .contact-form button {
+            width: 100%;
+            padding: 12px;
+            background-color: #2c3e50;
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .contact-form button:hover {
+            background-color: #29343c;
+        }
+        #responseMessage {
+            color: #2c3e50;
+            text-align: center;
+            display: none;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Contact Us</h1>
+
+    <div class="contact-info">
+        <h2>Customer Support</h2>
+        <p><span>Email:</span> info.auctionalley@gmail.com</p>
+        <p><span>Phone:</span> +91 9542908947</p>
+        <p><span>Live Chat:</span> Available 24/7 on our website</p>
+    </div>
+
+    <div class="contact-info">
+        <h2>Business Inquiries</h2>
+        <p><span>Email:</span> info.auctionalley@gmail.com</p>
+        <p><span>Phone:</span> +91 9542908947</p>
+        <p><span>Office Address:</span> AuctionAlley HQ, Madhapur Phase 2</p>
+    </div>
+
+    <div class="contact-info">
+        <h2>Feedback and Suggestions</h2>
+        <p>If you have suggestions or ideas, please email us at feedback@auctionalley.com.</p>
+    </div>
+
+    <div class="social-icons">
+        <h2>Follow Us on Social Media</h2>
+        <a href="https://www.facebook.com/auctionalley" target="_blank" class="social-button">Facebook</a>
+        <a href="https://www.twitter.com/auctionalley" target="_blank" class="social-button">Twitter</a>
+        <a href="https://www.instagram.com/auctionalley" target="_blank" class="social-button">Instagram</a>
+    </div>
+
+    <div class="contact-form">
+        <h2>Send Us a Message</h2>
+        <form id="contactForm">
+            <input type="text" id="name" placeholder="Your Name" required>
+            <input type="email" id="email" placeholder="Your Email" required>
+            <textarea id="message" rows="4" placeholder="Your Message" required></textarea>
+            <button type="button" onclick="submitForm()">Submit</button>
+        </form>
+        <p id="responseMessage">Thank you for reaching out! We'll get back to you soon.</p>
+    </div>
+</div>
+
+<script>
+    // JavaScript to handle form submission
+    function submitForm() {
+        // Form validation (simplified)
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const message = document.getElementById('message').value;
+
+        if (name && email && message) {
+            // Simulate form submission success
+            document.getElementById('responseMessage').style.display = 'block';
+            // Clear form fields
+            document.getElementById('contactForm').reset();
+        }
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auction Alley - Payment</title>
+<link rel="stylesheet" href="payment.css">
+<script defer src="payment.js"></script>
+    </head>
+    <div class="payment-container">
+        <h2>Payment Processing</h2>
+        <form id="paymentForm">
+            <div class="input-group">
+                <label for="cardNumber">Card Number:</label>
+                <input type="text" id="cardNumber" placeholder="XXXX-XXXX-XXXX-XXXX" required>
+            </div>
+            <div class="input-group">
+                <label for="expiryDate">Expiry Date:</label>
+                <input type="text" id="expiryDate" placeholder="MM/YY" required>
+            </div>
+            <div class="input-group">
+                <label for="cvv">CVV:</label>
+                <input type="password" id="cvv" placeholder="XXX" required>
+            </div>
+            <div class="input-group">
+                <label for="cardHolder">Card Holder Name:</label>
+                <input type="text" id="cardHolder" placeholder="Name on Card" required>
+            </div>
+            <button type="submit" id="payNowBtn">Pay Now</button>
+        </form>
+    </div>
+
+<!-- Confirmation Modal -->
+<div id="confirmationModal" class="modal">
+    <div class="modal-content">
+        <h3>Payment Successful!</h3>
+        <p>Thank you for your purchase on Auction Alley. Your payment has been processed successfully.</p>
+        <button id="confirmBtn">Confirm</button>
+    </div>
+</div>
+
+    <script>
+        // Retrieve the payment amount from sessionStorage
+        const paymentAmount = sessionStorage.getItem("paymentAmount") || "0";
+        const paymentAmountElement = document.getElementById("payment-amount");
+
+        // Display the payment amount on the payment page
+        paymentAmountElement.textContent = paymentAmount;
+
+        // Handle payment button click
+        document.getElementById("pay-button").addEventListener("click", () => {
+            alert(`Payment of ₹${paymentAmount} is processed successfully!`);
+            // Redirect to a success or home page
+            window.location.href = "success.html";
+        });
+    </script>
+</body>
+</html>

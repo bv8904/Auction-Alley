@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arts Corner</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px; /* Set a fixed height */
+            object-fit: cover; /* Ensures images cover the area while maintaining aspect ratio */
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .product-info {
+            text-align: center;
+        }
+
+        .product-title {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .price-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .bid-button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .bid-button:hover {
+            background-color: #45a049;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            min-width: 300px;
+        }
+
+        .close-button {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            font-size: 20px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .timer {
+            text-align: center;
+            font-size: 1.2em;
+            margin: 10px 0;
+            color: #e74c3c;
+        }
+
+        .bid-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .bid-input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.9em;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Art Corner</h1>
+        <div class="product-grid" id="productGrid">
+            <!-- Products will be dynamically added here -->
+        </div>
+    </div>
+
+    <!-- Bidding Modal -->
+    <div class="modal" id="bidModal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle"></h2>
+            <div class="timer" id="timer"></div>
+            <div class="bid-form">
+                <p>Current Bid: ₹<span id="currentBid">0</span></p>
+                <p>Base Price: ₹<span id="basePrice">0</span></p>
+                <input type="number" id="bidAmount" class="bid-input" placeholder="Enter your bid">
+                <p class="error-message" id="errorMessage"></p>
+                <button class="bid-button" onclick="placeBid()">Place Bid</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Product data with local image paths
+        const products = [
+            {
+                id: 1,
+                title: "Van Gogh Art",
+                image: "img/vango2.jpg",
+                basePrice: 10000,
+                currentBid: 10000,
+                endTime: new Date().getTime() + 3600000
+            },
+            {
+                id: 2,
+                title: "Paul Allen Art",
+                image: "img/paulallen.webp",
+                basePrice: 12000,
+                currentBid: 12000,
+                endTime: new Date().getTime() + 7200000
+            },
+            {
+                id: 3,
+                title: "Christie's Art",
+                image: "img/christie.jpeg",
+                basePrice: 18000,
+                currentBid: 18000,
+                endTime: new Date().getTime() + 3600000
+            },
+            {
+                id: 4,
+                title: "Black Art",
+                image: "img/Black.webp",
+                basePrice: 9000,
+                currentBid: 9000,
+                endTime: new Date().getTime() + 3600000
+            },
+            {
+                id: 5,
+                title: "Moon Art",
+                image: "img/moon.jpg",
+                basePrice: 7000,
+                currentBid: 7000,
+                endTime: new Date().getTime() + 3600000
+            },
+            {
+                id: 6,
+                title: "Masterwork",
+                image: "img/master.jpg",
+                basePrice: 1000,
+                currentBid: 1000,
+                endTime: new Date().getTime() + 3600000
+            },
+            {
+                id: 7,
+                title: "Kazuo Shiraga",
+                image: "img/kazuo.jpg",
+                basePrice: 8000,
+                currentBid: 8000,
+                endTime: new Date().getTime() + 3600000
+            },
+            {
+                id: 8,
+                title: "Rockefeller Collection",
+                image: "img/rock.webp",
+                basePrice: 4000,
+                currentBid: 4000,
+                endTime: new Date().getTime() + 3600000
+            }
+        ];
+
+        let selectedProduct = null;
+        let timerInterval = null;
+
+        // Function to load local images
+        function loadLocalImage(imagePath) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.onload = () => resolve(img);
+                img.onerror = () => {
+                    console.warn(`Failed to load image: ${imagePath}`);
+                    resolve('https://via.placeholder.com/200');
+                };
+                img.src = imagePath;
+            });
+        }
+
+        // Initialize the product grid with image handling
+        async function initializeProducts() {
+            const productGrid = document.getElementById('productGrid');
+            
+            const productCards = await Promise.all(products.map(async product => {
+                try {
+                    await loadLocalImage(product.image);
+                    return `
+                        <div class="product-card">
+                            <img src="${product.image}" 
+                                 alt="${product.title}" 
+                                 class="product-image"
+                                 onerror="this.src='https://via.placeholder.com/200'"
+                            >
+                            <div class="product-info">
+                                <h3 class="product-title">${product.title}</h3>
+                                <div class="price-info">
+                                    <span>Base: ₹${product.basePrice}</span>
+                                    <span>Current: ₹<span id="current-${product.id}">${product.currentBid}</span></span>
+                                </div>
+                                <button class="bid-button" onclick="openBidModal(${product.id})">Place Bid</button>
+                            </div>
+                        </div>
+                    `;
+                } catch (error) {
+                    console.error(`Error loading image for ${product.title}:`, error);
+                    return `
+                        <div class="product-card">
+                            <img src="https://via.placeholder.com/200" 
+                                 alt="${product.title}" 
+                                 class="product-image">
+                            <div class="product-info">
+                                <h3 class="product-title">${product.title}</h3>
+                                <div class="price-info">
+                                    <span>Base: ₹${product.basePrice}</span>
+                                    <span>Current: ₹<span id="current-${product.id}">${product.currentBid}</span></span>
+                                </div>
+                                <button class="bid-button" onclick="openBidModal(${product.id})">Place Bid</button>
+                            </div>
+                        </div>
+                    `;
+                }
+            }));
+            productGrid.innerHTML = productCards.join('');
+        }
+
+        function openBidModal(productId) {
+            selectedProduct = products.find(product => product.id === productId);
+            document.getElementById('modalTitle').innerText = `Bid for ${selectedProduct.title}`;
+            document.getElementById('currentBid').innerText = selectedProduct.currentBid;
+            document.getElementById('basePrice').innerText = selectedProduct.basePrice;
+            document.getElementById('errorMessage').style.display = 'none';
+
+            document.getElementById('bidModal').style.display = 'block';
+            
+            // Start the countdown timer
+            startTimer(selectedProduct.endTime);
+        }
+
+        function startTimer(endTime) {
+            if (timerInterval) clearInterval(timerInterval);
+
+            timerInterval = setInterval(() => {
+                const timeLeft = endTime - new Date().getTime();
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    document.getElementById('timer').innerText = 'Auction Ended';
+                } else {
+                    const minutes = Math.floor(timeLeft / 60000);
+                    const seconds = Math.floor((timeLeft % 60000) / 1000);
+                    document.getElementById('timer').innerText = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                }
+            }, 1000);
+        }
+
+        function closeModal() {
+            document.getElementById('bidModal').style.display = 'none';
+            clearInterval(timerInterval);
+        }
+
+        function placeBid() {
+            const bidAmount = document.getElementById('bidAmount').value;
+            const bidInput = parseInt(bidAmount); // Convert the input to a number
+
+            // Check if the bid input is valid and greater than the current bid
+            if (isNaN(bidInput) || bidInput <= selectedProduct.currentBid) {
+                document.getElementById('errorMessage').style.display = 'block';
+                document.getElementById('errorMessage').innerText = 'Bid must be higher than the current bid!';
+                return;
+            }
+
+            // Update the product's current bid
+            selectedProduct.currentBid = bidInput;
+
+            // Update the DOM elements showing the current bid
+            document.getElementById('currentBid').innerText = selectedProduct.currentBid;
+            document.getElementById(`current-${selectedProduct.id}`).innerText = selectedProduct.currentBid;
+
+            // Close the modal after placing the bid
+            closeModal();
+        }
+
+        // Initialize the products on page load
+        window.onload = initializeProducts;
+    </script>
+</body>
+</html>
